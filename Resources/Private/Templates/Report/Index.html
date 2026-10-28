@@ -1,0 +1,281 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+<f:layout name="Default" />
+<f:section name="Content">
+<f:variable name="lll" value="LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:" />
+
+<div class="pxecr">
+
+    <div class="pxecr-head">
+        <div>
+            <h1 class="pxecr-title">{f:translate(key: '{lll}mod.title')}: {projectLabel}</h1>
+            <f:if condition="{latest}">
+                <p class="text-body-secondary pxecr-meta">
+                    <f:translate key="{lll}mod.checkedAt" />:
+                    <strong><f:format.date format="Y-m-d H:i">@{latest.crdate}</f:format.date></strong>
+                    <f:if condition="{latest.collector}">
+                        &middot; <f:translate key="{lll}mod.collector" />: <code>{latest.collector}</code>
+                    </f:if>
+                    &middot; <f:translate key="{lll}mod.triggeredBy" />: {latest.triggered_by}
+                </p>
+            </f:if>
+        </div>
+        <div class="pxecr-actions">
+            <form method="post" action="{refreshUri}" class="d-inline">
+                <button type="submit" class="btn btn-primary" title="{f:translate(key: '{lll}mod.refreshHint')}">
+                    <core:icon identifier="actions-refresh" size="small" />
+                    <f:translate key="{lll}mod.refresh" />
+                </button>
+            </form>
+            <button type="button" class="btn btn-default" data-pxecr-testmail>
+                <core:icon identifier="actions-envelope" size="small" />
+                <f:translate key="{lll}mod.testMail" />
+            </button>
+        </div>
+    </div>
+
+    <f:if condition="{error}">
+        <div class="callout callout-danger">
+            <div class="callout-icon"><span class="icon-emphasized"><core:icon identifier="actions-exclamation" size="medium" /></span></div>
+            <div class="callout-content">
+                <div class="callout-title"><f:translate key="{lll}mod.lastRunFailed" /></div>
+                <div class="callout-body">
+                    <p><f:translate key="{lll}error.{error.code}" default="{f:translate(key: '{lll}error.unexpected')}" /></p>
+                    <f:if condition="{error.message}">
+                        <details>
+                            <summary><f:translate key="{lll}mod.details" /></summary>
+                            <pre class="pxecr-pre">{error.message}</pre>
+                        </details>
+                    </f:if>
+                </div>
+            </div>
+        </div>
+    </f:if>
+
+    <f:for each="{report.notices}" as="notice">
+        <div class="callout callout-info">
+            <div class="callout-icon"><span class="icon-emphasized"><core:icon identifier="actions-info" size="medium" /></span></div>
+            <div class="callout-content">
+                <div class="callout-title"><f:translate key="{lll}mod.notice" /></div>
+                <div class="callout-body"><f:translate key="{lll}notice.{notice}" default="{notice}" /></div>
+            </div>
+        </div>
+    </f:for>
+
+    <f:if condition="{report}">
+        <f:then>
+
+            <div class="pxecr-chips">
+                <span class="pxecr-chip"><b>{report.counts.total}</b> <f:translate key="{lll}mod.outdated" /></span>
+                <span class="pxecr-chip {f:if(condition: '{report.counts.security} > 0', then: 'pxecr-chip-danger')}"><b>{report.counts.security}</b> <f:translate key="{lll}mod.security" /></span>
+                <span class="pxecr-chip"><b>{report.counts.major}</b> <f:translate key="{lll}mod.major" /></span>
+                <span class="pxecr-chip"><b>{report.counts.minor}</b> <f:translate key="{lll}mod.minor" /></span>
+                <span class="pxecr-chip"><b>{report.counts.patch}</b> <f:translate key="{lll}mod.patch" /></span>
+                <f:if condition="{report.counts.nextMajor} > 0">
+                    <span class="pxecr-chip pxecr-chip-warning"><b>{report.counts.nextMajor}</b> <f:translate key="{lll}mod.nextMajorAvailable" /></span>
+                </f:if>
+                <f:if condition="{report.counts.private} > 0">
+                    <span class="pxecr-chip"><b>{report.counts.private}</b> <f:translate key="{lll}mod.private" /></span>
+                </f:if>
+                <f:if condition="{trend}">
+                    <span class="pxecr-spark" role="img" aria-label="{f:translate(key: '{lll}mod.trend')}" title="{f:translate(key: '{lll}mod.trend')}">
+                        <f:for each="{trend}" as="pt"><span class="pxecr-bar {f:if(condition: pt.error, then: 'pxecr-bar-error')}" data-pxecr-height="{pt.h}" title="{pt.label}"></span></f:for>
+                    </span>
+                </f:if>
+            </div>
+
+            <f:if condition="{latest.ai_summary}">
+                <div class="callout callout-notice">
+                    <div class="callout-icon"><span class="icon-emphasized"><core:icon identifier="actions-lightbulb-on" size="medium" /></span></div>
+                    <div class="callout-content">
+                        <div class="callout-title"><f:translate key="{lll}mod.summary" /></div>
+                        <div class="callout-body">
+                            <p>{latest.ai_summary}</p>
+                            <p class="text-body-secondary small mb-0"><f:translate key="{lll}mod.summaryHint" /></p>
+                        </div>
+                    </div>
+                </div>
+            </f:if>
+
+            <f:if condition="{report.security}">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h2 class="panel-title"><f:translate key="{lll}mod.securityHeading" /> <span class="badge badge-danger">{report.counts.security}</span></h2>
+                    </div>
+                    <div class="table-fit">
+                        <table class="table table-striped table-hover mb-0" data-pxecr-sec>
+                            <thead>
+                                <tr>
+                                    <th><f:translate key="{lll}mod.package" /></th>
+                                    <th><button type="button" class="btn btn-link p-0 pxecr-sort" data-pxecr-sort title="{f:translate(key: '{lll}mod.sortBySeverity')}"><f:translate key="{lll}mod.severity" /></button></th>
+                                    <th><f:translate key="{lll}mod.cve" /></th>
+                                    <th><f:translate key="{lll}mod.advisory" /></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <f:for each="{report.security}" as="s">
+                                    <tr data-sev="{s.severity}">
+                                        <td><code>{s.name}</code></td>
+                                        <td><f:render section="severity" arguments="{severity: s.severity}" /></td>
+                                        <td>{s.cve}</td>
+                                        <td>
+                                            <f:if condition="{s.link}">
+                                                <f:then><a href="{s.link}" target="_blank" rel="noopener noreferrer">{s.title}</a></f:then>
+                                                <f:else>{s.title}</f:else>
+                                            </f:if>
+                                        </td>
+                                    </tr>
+                                </f:for>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </f:if>
+
+            <f:render section="pkgTable" arguments="{title: '{f:translate(key: \'{lll}mod.typo3Heading\')}', rows: report.typo3, lll: lll}" />
+            <f:render section="pkgTable" arguments="{title: '{f:translate(key: \'{lll}mod.otherHeading\')}', rows: report.other, lll: lll}" />
+
+            <f:if condition="{report.majorOnly}">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title"><f:translate key="{lll}mod.majorOnlyHeading" /> <span class="badge badge-secondary">{report.majorOnly -> f:count()}</span></h2>
+                    </div>
+                    <div class="panel-body">
+                        <p class="text-body-secondary"><f:translate key="{lll}mod.majorOnlyHint" /></p>
+                        <ul class="mb-0">
+                            <f:for each="{report.majorOnly}" as="m"><li><code>{m.name}</code> <span class="pxecr-ver">{m.current}</span> <span class="badge badge-warning"><f:translate key="{lll}mod.majorPrefix" />: {m.nextMajor}</span></li></f:for>
+                        </ul>
+                    </div>
+                </div>
+            </f:if>
+
+            <f:if condition="{report.private}">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title"><f:translate key="{lll}mod.privateHeading" /> <span class="badge badge-secondary">{report.counts.private}</span></h2>
+                    </div>
+                    <div class="panel-body">
+                        <p class="text-body-secondary"><f:translate key="{lll}mod.privateHint" /></p>
+                        <ul class="mb-0">
+                            <f:for each="{report.private}" as="name"><li><code>{name}</code></li></f:for>
+                        </ul>
+                    </div>
+                </div>
+            </f:if>
+
+            <f:if condition="{report.counts.total} == 0 && {report.counts.security} == 0">
+                <div class="callout callout-success">
+                    <div class="callout-icon"><span class="icon-emphasized"><core:icon identifier="actions-check" size="medium" /></span></div>
+                    <div class="callout-content">
+                        <div class="callout-body"><f:translate key="{lll}mod.allUpToDate" /></div>
+                    </div>
+                </div>
+            </f:if>
+
+            <p class="text-body-secondary small"><f:translate key="{lll}mod.latestHint" /></p>
+
+        </f:then>
+        <f:else>
+            <f:if condition="!{error}">
+                <div class="callout callout-info">
+                    <div class="callout-icon"><span class="icon-emphasized"><core:icon identifier="actions-info" size="medium" /></span></div>
+                    <div class="callout-content">
+                        <div class="callout-title"><f:translate key="{lll}mod.emptyTitle" /></div>
+                        <div class="callout-body"><f:translate key="{lll}mod.emptyText" /></div>
+                    </div>
+                </div>
+            </f:if>
+        </f:else>
+    </f:if>
+
+    <dialog class="pxecr-dialog" data-pxecr-dialog aria-labelledby="pxecr-dialog-title">
+        <form method="post" action="{testMailUri}">
+            <h3 id="pxecr-dialog-title" class="h4"><f:translate key="{lll}mod.testMailTitle" /></h3>
+            <p class="text-body-secondary">
+                <f:translate key="{lll}mod.testMailHint" />
+                <f:if condition="{mailRecipients}">
+                    <f:then><code>{mailRecipients}</code></f:then>
+                    <f:else><em><f:translate key="{lll}mod.testMailNoRecipients" /></em></f:else>
+                </f:if>
+            </p>
+            <div class="form-group">
+                <label for="pxecr-email" class="form-label"><f:translate key="{lll}mod.email" /></label>
+                <input type="email" id="pxecr-email" name="email" class="form-control" placeholder="name@example.com" autocomplete="email">
+            </div>
+            <div class="pxecr-dialog-actions">
+                <button type="button" class="btn btn-default" data-pxecr-close><f:translate key="{lll}mod.cancel" /></button>
+                <button type="submit" class="btn btn-primary"><f:translate key="{lll}mod.send" /></button>
+            </div>
+        </form>
+    </dialog>
+
+    <p class="pxecr-footer text-body-secondary small">
+        <a href="https://www.pixelegg.de" target="_blank" rel="noopener noreferrer"><f:translate key="{lll}mod.footer" /></a>
+    </p>
+
+</div>
+</f:section>
+
+<f:section name="severity">
+    <f:switch expression="{severity -> f:format.case(mode: 'lower')}">
+        <f:case value="critical"><span class="badge badge-danger">{severity}</span></f:case>
+        <f:case value="high"><span class="badge badge-danger">{severity}</span></f:case>
+        <f:case value="medium"><span class="badge badge-warning">{severity}</span></f:case>
+        <f:case value="low"><span class="badge badge-info">{severity}</span></f:case>
+        <f:defaultCase><f:if condition="{severity}"><f:then><span class="badge badge-secondary">{severity}</span></f:then><f:else>&ndash;</f:else></f:if></f:defaultCase>
+    </f:switch>
+</f:section>
+
+<f:section name="impact">
+    <f:switch expression="{impact}">
+        <f:case value="major"><span class="badge badge-danger">{impact}</span></f:case>
+        <f:case value="minor"><span class="badge badge-warning">{impact}</span></f:case>
+        <f:case value="patch"><span class="badge badge-info">{impact}</span></f:case>
+        <f:defaultCase><span class="badge badge-secondary">{impact}</span></f:defaultCase>
+    </f:switch>
+</f:section>
+
+<f:section name="pkgTable">
+    <f:if condition="{rows}">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">{title} <span class="badge badge-secondary">{rows -> f:count()}</span></h2>
+            </div>
+            <div class="table-fit">
+                <table class="table table-striped table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th><f:translate key="{lll}mod.package" /></th>
+                            <th><f:translate key="{lll}mod.installed" /></th>
+                            <th><f:translate key="{lll}mod.latest" /></th>
+                            <th><f:translate key="{lll}mod.impact" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <f:for each="{rows}" as="p">
+                            <tr>
+                                <td>
+                                    <code>{p.name}</code>
+                                    <f:if condition="{p.abandoned}">
+                                        <span class="badge badge-warning" title="{f:if(condition: '{p.abandoned} === true', then: '{f:translate(key: \'{lll}mod.abandoned\')}', else: '{f:translate(key: \'{lll}mod.abandonedReplacement\', arguments: {0: p.abandoned})}')}"><f:translate key="{lll}mod.abandoned" /></span>
+                                    </f:if>
+                                    <f:if condition="{p.description}"><br><small class="text-body-secondary">{p.description}</small></f:if>
+                                </td>
+                                <td class="pxecr-ver">{p.current}</td>
+                                <td class="pxecr-ver">
+                                    <strong>{p.latest}</strong>
+                                    <f:if condition="{p.nextMajor}">
+                                        <span class="badge badge-warning ms-1"><f:translate key="{lll}mod.majorPrefix" />: {p.nextMajor}</span>
+                                    </f:if>
+                                </td>
+                                <td><f:render section="impact" arguments="{impact: p.impact}" /></td>
+                            </tr>
+                        </f:for>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </f:if>
+</f:section>
+</html>

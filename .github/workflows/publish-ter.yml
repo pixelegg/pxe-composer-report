@@ -1,0 +1,79 @@
+# Publishes a tagged release to the TYPO3 Extension Repository (TER) with typo3/tailor.
+#
+# Setup (once): create an access token at https://extensions.typo3.org/my-access-tokens
+# (scope "extension:write") and store it as the repository secret TYPO3_API_TOKEN.
+# Release: bump `version` in ext_emconf.php, add the CHANGELOG entry, then push a tag
+# `vX.Y.Z` that matches it. The tag message (or the CHANGELOG section) becomes the
+# upload comment.
+name: Publish to TER
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    name: Upload ${{ github.ref_name }} to TER
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    env:
+      TYPO3_EXTENSION_KEY: pxe_composer_report
+      TYPO3_API_TOKEN: ${{ secrets.TYPO3_API_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          EMCONF_VERSION=$(php -r "\$EM_CONF=[]; \$_EXTKEY='pxe_composer_report'; include 'ext_emconf.php'; echo \$EM_CONF[\$_EXTKEY]['version'];")
+          if [ "$EMCONF_VERSION" != "$VERSION" ]; then
+            echo "ext_emconf.php says ${EMCONF_VERSION}, tag says ${VERSION}" >&2
+            exit 1
+          fi
+
+      - name: Check for TER token
+        id: token
+        run: |
+          if [ -z "$TYPO3_API_TOKEN" ]; then
+            echo "::warning::Secret TYPO3_API_TOKEN is not set – skipping the TER upload."
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up PHP
+        if: steps.token.outputs.present == 'true'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: intl, mbstring, xml, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Install tailor
+        if: steps.token.outputs.present == 'true'
+        run: composer global require typo3/tailor --prefer-dist --no-progress
+
+      - name: Upload comment
+        if: steps.token.outputs.present == 'true'
+        id: comment
+        run: |
+          COMMENT=$(git tag -l --format='%(contents)' "$GITHUB_REF_NAME" | head -c 1500)
+          if [ -z "$COMMENT" ]; then
+            COMMENT="Release ${{ steps.version.outputs.version }}, see CHANGELOG.md"
+          fi
+          {
+            echo 'comment<<EOF'
+            echo "$COMMENT"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Publish
+        if: steps.token.outputs.present == 'true'
+        run: |
+          ~/.composer/vendor/bin/tailor set-version "${{ steps.version.outputs.version }}" --no-docs
+          ~/.composer/vendor/bin/tailor ter:publish --comment "${{ steps.comment.outputs.comment }}" "${{ steps.version.outputs.version }}"

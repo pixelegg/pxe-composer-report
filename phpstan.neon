@@ -1,0 +1,16 @@
+includes:
+    - vendor/saschaegerer/phpstan-typo3/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - Classes
+        - Configuration
+        - Tests
+    excludePaths:
+        # Only compiled when pxe_hub is installed (its interfaces are not a dependency).
+        - Classes/Hub/*
+        - Tests/Unit/Hub/*
+    bootstrapFiles:
+        - vendor/autoload.php
+    treatPhpDocTypesAsCertain: false

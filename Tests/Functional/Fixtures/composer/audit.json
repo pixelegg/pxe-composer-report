@@ -1,0 +1,9 @@
+{
+    "advisories": {
+        "guzzlehttp/guzzle": [
+            {"advisoryId": "PKSA-test-1", "packageName": "guzzlehttp/guzzle", "affectedVersions": "<7.9.0", "title": "Example advisory", "cve": "CVE-2026-0001", "link": "https://example.org/advisory", "severity": "high", "reportedAt": "2026-01-01T00:00:00+00:00"}
+        ]
+    },
+    "abandoned": {"acme/legacy": "acme/modern"},
+    "filter": []
+}

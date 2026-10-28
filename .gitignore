@@ -1,0 +1,10 @@
+/.phpunit.cache/
+/Tests/.phpunit.cache/
+/.php-cs-fixer.cache
+/.phpunit.result.cache
+/vendor/
+/public/
+/var/
+/composer.lock
+/Documentation-GENERATED-temp/
+.DS_Store

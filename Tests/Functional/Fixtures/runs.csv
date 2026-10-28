@@ -1,0 +1,5 @@
+"tx_pxecomposerreport_domain_model_run"
+,"uid","pid","crdate","tstamp","collector","status","total_outdated","security_count","major","triggered_by"
+,1,0,1700000000,1700000000,"composer","ok",10,0,0,"scheduler"
+,2,0,1700000100,1700000100,"composer","ok",20,1,1,"scheduler"
+,3,0,1700000200,1700000200,"packagist","ok",30,2,1,"manual"

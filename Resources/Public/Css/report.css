@@ -1,0 +1,28 @@
+/* pxe_composer_report backend module: only what core backend styles do not provide. */
+.pxecr-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.pxecr-title { margin: 0; }
+.pxecr-meta { margin: .25rem 0 0; }
+.pxecr-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+.pxecr-chips { display: flex; gap: .5rem; flex-wrap: wrap; align-items: stretch; margin: 0 0 1rem; }
+.pxecr-chip { display: inline-flex; align-items: center; gap: .35rem; padding: .35rem .75rem; border: 1px solid var(--typo3-component-border-color, #ccc); border-radius: var(--typo3-component-border-radius, .25rem); background: var(--typo3-component-bg, #fff); }
+.pxecr-chip b { font-size: 1.1em; }
+.pxecr-chip-danger { border-color: var(--typo3-state-danger-border-color, #c83c3c); color: var(--typo3-state-danger-color, #c83c3c); }
+.pxecr-chip-warning { border-color: var(--typo3-state-warning-border-color, #e8a33d); }
+
+.pxecr-spark { display: inline-flex; align-items: flex-end; gap: 2px; height: 2.2rem; padding: 0 .25rem; margin-left: auto; }
+.pxecr-bar { display: inline-block; width: 6px; min-height: 2px; background: var(--typo3-component-border-color, #ccc); border-radius: 1px 1px 0 0; }
+.pxecr-bar:last-child { background: var(--typo3-component-primary-color, #0078e6); }
+.pxecr-bar-error { background: var(--typo3-state-danger-border-color, #c83c3c); }
+
+.pxecr-ver { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pxecr-sort { font-weight: inherit; color: inherit; text-decoration: none; }
+.pxecr-sort::after { content: " \25BE"; opacity: .6; }
+.pxecr-sort[data-dir="asc"]::after { content: " \25B4"; }
+.pxecr-pre { white-space: pre-wrap; word-break: break-word; max-height: 20rem; overflow: auto; }
+
+.pxecr-dialog { border: 1px solid var(--typo3-component-border-color, #ccc); border-radius: var(--typo3-component-border-radius, .25rem); padding: 1.5rem; width: min(28rem, 92vw); color: inherit; background: var(--typo3-component-bg, #fff); }
+.pxecr-dialog::backdrop { background: rgba(0, 0, 0, .4); }
+.pxecr-dialog-actions { display: flex; justify-content: flex-end; gap: .5rem; margin-top: 1rem; }
+
+.pxecr-footer { margin-top: 2rem; }

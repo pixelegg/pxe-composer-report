@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: TYPO3 ${{ matrix.typo3 }} / PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { typo3: '^13.4', php: '8.2', testing-framework: '^8.2', phpunit: '^10.5 || ^11.5' }
+          - { typo3: '^13.4', php: '8.3', testing-framework: '^8.2', phpunit: '^10.5 || ^11.5' }
+          - { typo3: '^13.4', php: '8.4', testing-framework: '^8.2', phpunit: '^10.5 || ^11.5' }
+          - { typo3: '^14.0', php: '8.3', testing-framework: '^9.0', phpunit: '^11.5 || ^12.0' }
+          - { typo3: '^14.0', php: '8.4', testing-framework: '^9.0', phpunit: '^11.5 || ^12.0' }
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: intl, mbstring, pdo_sqlite, sqlite3, xml, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Pin TYPO3 ${{ matrix.typo3 }}
+        run: |
+          composer require --no-update \
+            "typo3/cms-core:${{ matrix.typo3 }}" \
+            "typo3/cms-backend:${{ matrix.typo3 }}" \
+            "typo3/cms-fluid:${{ matrix.typo3 }}" \
+            "typo3/cms-scheduler:${{ matrix.typo3 }}"
+          composer require --no-update --dev \
+            "typo3/testing-framework:${{ matrix.testing-framework }}" \
+            "phpunit/phpunit:${{ matrix.phpunit }}"
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: --no-progress --prefer-dist
+
+      - name: Coding standards
+        run: composer ci:cs
+
+      - name: PHPStan
+        run: composer ci:stan
+
+      - name: Unit tests
+        run: composer ci:test
+
+      - name: Functional tests (SQLite)
+        env:
+          typo3DatabaseDriver: pdo_sqlite
+        run: composer ci:test:functional

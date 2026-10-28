@@ -1,0 +1,95 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<body style="margin:0; padding:0; background:#f3f3f3;">
+<div style="max-width:640px; margin:0 auto; padding:24px; font-family:Helvetica,Arial,sans-serif; color:#222; line-height:1.5; font-size:14px;">
+
+    <div style="font-size:11px; font-weight:bold; letter-spacing:.1em; text-transform:uppercase; color:#777;">{labels.eyebrow}</div>
+    <h1 style="font-size:20px; font-weight:bold; margin:6px 0 4px; color:#222;">{labels.title}: {projectLabel}</h1>
+    <p style="font-size:13px; color:#666; margin:0 0 16px;">{labels.checkedAt} {date} &middot; {labels.collector}: {report.collector}</p>
+
+    <f:if condition="{aiSummary}">
+        <div style="background:#e8f0f8; border-left:4px solid #0078e6; padding:12px 14px; margin:0 0 18px;">
+            <strong style="display:block; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:#555; margin-bottom:4px;">{labels.summary}</strong>
+            {aiSummary}
+        </div>
+    </f:if>
+
+    <p style="margin:0 0 4px;">
+        <f:render section="chip" arguments="{value: report.counts.total, label: labels.outdated}" />
+        <f:render section="chip" arguments="{value: report.counts.security, label: labels.security, alert: '{f:if(condition: \'{report.counts.security} > 0\', then: 1, else: 0)}'}" />
+        <f:render section="chip" arguments="{value: report.counts.major, label: labels.major}" />
+        <f:render section="chip" arguments="{value: report.counts.minor, label: labels.minor}" />
+        <f:render section="chip" arguments="{value: report.counts.patch, label: labels.patch}" />
+        <f:if condition="{report.counts.nextMajor} > 0">
+            <f:render section="chip" arguments="{value: report.counts.nextMajor, label: labels.nextMajorAvailable}" />
+        </f:if>
+    </p>
+    <p style="color:#777; font-size:12px; margin:4px 0 20px;">{labels.latestHint}</p>
+
+    <f:if condition="{report.counts.total} == 0 && {report.counts.security} == 0">
+        <p style="background:#e9f5ec; border-left:4px solid #3c9d58; padding:12px 14px; margin:0 0 18px;">{labels.nothingOutdated}</p>
+    </f:if>
+
+    <f:if condition="{report.security}">
+        <h2 style="font-size:15px; font-weight:bold; color:#c83c3c; margin:18px 0 8px;">{labels.securityHeading} ({report.counts.security})</h2>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:13px;">
+            <f:for each="{report.security}" as="s">
+                <tr>
+                    <td style="padding:8px 10px 8px 0; border-bottom:1px solid #e5e5e5; vertical-align:top; font-weight:bold;">{s.name}</td>
+                    <td style="padding:8px 10px; border-bottom:1px solid #e5e5e5; vertical-align:top; color:#c83c3c; white-space:nowrap;">{s.severity}</td>
+                    <td style="padding:8px 0 8px 10px; border-bottom:1px solid #e5e5e5; vertical-align:top;">
+                        <f:if condition="{s.link}">
+                            <f:then><a href="{s.link}" style="color:#0078e6;">{s.cve}<f:if condition="{s.cve}">: </f:if>{s.title}</a></f:then>
+                            <f:else>{s.cve}<f:if condition="{s.cve}">: </f:if>{s.title}</f:else>
+                        </f:if>
+                    </td>
+                </tr>
+            </f:for>
+        </table>
+    </f:if>
+
+    <f:render section="pkgList" arguments="{title: labels.typo3Heading, rows: report.typo3, labels: labels}" />
+    <f:render section="pkgList" arguments="{title: labels.otherHeading, rows: report.other, labels: labels}" />
+
+    <f:if condition="{report.majorOnly}">
+        <h2 style="font-size:15px; font-weight:bold; color:#222; margin:18px 0 4px;">{labels.majorOnlyHeading} ({report.majorOnly -> f:count()})</h2>
+        <p style="color:#777; font-size:12px; margin:0 0 8px;">{labels.majorOnlyHint}</p>
+        <p style="font-size:13px; margin:0;"><f:for each="{report.majorOnly}" as="m" iteration="i">{m.name} {m.current} &rarr; {labels.majorPrefix} {m.nextMajor}<f:if condition="!{i.isLast}"><br></f:if></f:for></p>
+    </f:if>
+
+    <f:if condition="{report.private}">
+        <h2 style="font-size:15px; font-weight:bold; color:#222; margin:18px 0 4px;">{labels.privateHeading} ({report.counts.private})</h2>
+        <p style="color:#777; font-size:12px; margin:0 0 8px;">{labels.privateHint}</p>
+        <p style="font-size:13px; margin:0;"><f:for each="{report.private}" as="name" iteration="i">{name}<f:if condition="!{i.isLast}">, </f:if></f:for></p>
+    </f:if>
+
+    <p style="color:#999; font-size:11px; margin:24px 0 0; border-top:1px solid #e5e5e5; padding-top:12px;">
+        <a href="https://www.pixelegg.de" style="color:#999;">{labels.footer}</a>
+    </p>
+</div>
+</body>
+
+<f:section name="chip">
+    <span style="display:inline-block; background:{f:if(condition: alert, then: '#fbe9e9', else: '#fff')}; border:1px solid {f:if(condition: alert, then: '#e5b3b3', else: '#ddd')}; color:{f:if(condition: alert, then: '#c83c3c', else: '#222')}; border-radius:999px; padding:4px 12px; font-size:13px; margin:0 6px 6px 0;"><strong>{value}</strong> {label}</span>
+</f:section>
+
+<f:section name="pkgList">
+    <f:if condition="{rows}">
+        <h2 style="font-size:15px; font-weight:bold; color:#222; margin:18px 0 8px;">{title} ({rows -> f:count()})</h2>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:13px;">
+            <f:for each="{rows}" as="p">
+                <tr>
+                    <td style="padding:8px 10px 8px 0; border-bottom:1px solid #e5e5e5; vertical-align:top; font-weight:bold;">
+                        {p.name}
+                        <f:if condition="{p.abandoned}"><br><span style="color:#b36b00; font-size:11px; font-weight:normal;">{labels.abandoned}<f:if condition="{p.abandoned} !== true">: {p.abandoned}</f:if></span></f:if>
+                    </td>
+                    <td style="padding:8px 10px; border-bottom:1px solid #e5e5e5; vertical-align:top; white-space:nowrap;">
+                        <span style="color:#666;">{p.current}</span> &rarr; <strong>{p.latest}</strong>
+                        <f:if condition="{p.nextMajor}"><br><span style="color:#b36b00; font-size:11px;">{labels.majorPrefix}: {p.nextMajor}</span></f:if>
+                    </td>
+                    <td style="padding:8px 0 8px 10px; border-bottom:1px solid #e5e5e5; vertical-align:top; color:#666;">{p.impact}</td>
+                </tr>
+            </f:for>
+        </table>
+    </f:if>
+</f:section>
+</html>

@@ -1,0 +1,38 @@
+# cat=basic/enable/010; type=options[auto,composer,packagist]; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.collectorMode
+collectorMode = auto
+
+# cat=basic/enable/020; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.composerBinary
+composerBinary = composer
+
+# cat=basic/enable/030; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.projectLabel
+projectLabel =
+
+# cat=basic/enable/040; type=int+; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.keepRuns
+keepRuns = 50
+
+# cat=privacy/enable/010; type=boolean; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.resolveLatestViaPackagist
+resolveLatestViaPackagist = 1
+
+# cat=privacy/enable/020; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.privateVendors
+privateVendors =
+
+# cat=email/enable/010; type=boolean; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.emailEnabled
+emailEnabled = 0
+
+# cat=email/enable/020; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.emailRecipients
+emailRecipients =
+
+# cat=email/enable/030; type=boolean; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.emailOnlyOnFindings
+emailOnlyOnFindings = 1
+
+# cat=email/enable/040; type=options[English=en,Deutsch=de]; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.emailLanguage
+emailLanguage = en
+
+# cat=ai/enable/010; type=boolean; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.aiEnabled
+aiEnabled = 0
+
+# cat=ai/enable/020; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.anthropicApiKey
+anthropicApiKey =
+
+# cat=ai/enable/030; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.anthropicModel
+anthropicModel = claude-haiku-5-5

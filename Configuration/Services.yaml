@@ -1,0 +1,28 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Pixelegg\PxeComposerReport\:
+    resource: '../Classes/*'
+    # Hub/ is registered conditionally in Services.php (only when pxe_hub is installed),
+    # so it must be excluded from autoconfigure to stay safe when pxe_hub is absent.
+    exclude: '../Classes/Hub/*'
+
+  Pixelegg\PxeComposerReport\Controller\ComposerReportController:
+    public: true
+    tags: ['backend.controller']
+
+  # Public because the scheduler task obtains it via GeneralUtility::makeInstance()
+  # (see ComposerReportTask for why the task cannot use constructor injection).
+  Pixelegg\PxeComposerReport\Service\ComposerReportService:
+    public: true
+
+  Pixelegg\PxeComposerReport\Command\ReportCommand:
+    tags:
+      - name: 'console.command'
+        command: 'pxe:composer-report:run'
+        description: 'Read-only composer update report: stores the report, optionally emails it. Exit code 1 when security advisories exist.'
+        # The extension ships its own scheduler task; do not offer the command a second time.
+        schedulable: false

@@ -1,0 +1,88 @@
+{
+    "name": "pixelegg/pxe-composer-report",
+    "type": "typo3-cms-extension",
+    "description": "Read-only composer update report for TYPO3: backend module, scheduler task and CLI command listing outdated packages and security advisories, optional email and AI summary.",
+    "license": "GPL-2.0-or-later",
+    "keywords": [
+        "TYPO3",
+        "composer",
+        "updates",
+        "security",
+        "advisories",
+        "backend-module",
+        "scheduler"
+    ],
+    "homepage": "https://github.com/pixelegg/pxe-composer-report",
+    "support": {
+        "issues": "https://github.com/pixelegg/pxe-composer-report/issues",
+        "source": "https://github.com/pixelegg/pxe-composer-report",
+        "docs": "https://github.com/pixelegg/pxe-composer-report#readme"
+    },
+    "authors": [
+        {
+            "name": "pixelegg",
+            "email": "info@pixelegg.de",
+            "homepage": "https://www.pixelegg.de",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "psr/http-message": "^1.1 || ^2.0",
+        "psr/log": "^2.0 || ^3.0",
+        "symfony/console": "^6.4 || ^7.0",
+        "symfony/process": "^6.4 || ^7.0",
+        "typo3/cms-backend": "^13.4 || ^14.0",
+        "typo3/cms-core": "^13.4 || ^14.0",
+        "typo3/cms-fluid": "^13.4 || ^14.0",
+        "typo3/cms-scheduler": "^13.4 || ^14.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^10.5 || ^11.5 || ^12.0",
+        "saschaegerer/phpstan-typo3": "^3.0",
+        "ssch/typo3-rector": "^3.0",
+        "typo3/coding-standards": "^0.8 || ^0.9",
+        "typo3/testing-framework": "^8.2 || ^9.0"
+    },
+    "suggest": {
+        "pixelegg/pxe-hub": "Optional: shows this report as a card in the pxe_hub overview module (not required, not yet published)."
+    },
+    "autoload": {
+        "psr-4": {
+            "Pixelegg\\PxeComposerReport\\": "Classes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Pixelegg\\PxeComposerReport\\Tests\\": "Tests/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "pxe_composer_report"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "typo3/class-alias-loader": true,
+            "typo3/cms-composer-installers": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "ci": [
+            "@ci:cs",
+            "@ci:stan",
+            "@ci:test",
+            "@ci:test:functional"
+        ],
+        "ci:cs": "php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff",
+        "ci:cs:fix": "php-cs-fixer fix --config=.php-cs-fixer.php",
+        "ci:rector": "rector process --dry-run",
+        "ci:stan": "phpstan analyse --memory-limit=1G",
+        "ci:test": "phpunit -c phpunit.xml.dist --testsuite unit",
+        "ci:test:functional": "phpunit -c phpunit.functional.xml.dist --testsuite functional"
+    }
+}

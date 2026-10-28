@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="EXT:pxe_composer_report/Resources/Private/Language/locallang_mod.xlf" date="2026-10-28T00:00:00Z" product-name="pxe_composer_report">
+    <header/>
+    <body>
+      <trans-unit id="mlang_tabs_tab"><source>Composer Report</source></trans-unit>
+      <trans-unit id="mlang_labels_tablabel"><source>Composer update report</source></trans-unit>
+      <trans-unit id="mlang_labels_tabdescr"><source>Read-only report of outdated composer packages and security advisories for this project.</source></trans-unit>
+    </body>
+  </file>
+</xliff>

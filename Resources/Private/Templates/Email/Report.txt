@@ -1,0 +1,32 @@
+<f:spaceless>{labels.title}: {projectLabel}
+{labels.checkedAt} {date} - {labels.collector}: {report.collector}
+</f:spaceless>
+
+<f:if condition="{aiSummary}">{labels.summary}:
+{aiSummary}
+
+</f:if>{report.counts.total} {labels.outdated} - {report.counts.security} {labels.security} - {report.counts.major} {labels.major} - {report.counts.minor} {labels.minor} - {report.counts.patch} {labels.patch}<f:if condition="{report.counts.nextMajor} > 0"> - {report.counts.nextMajor} {labels.nextMajorAvailable}</f:if>
+
+{labels.latestHint}
+<f:if condition="{report.counts.total} == 0 && {report.counts.security} == 0">
+{labels.nothingOutdated}
+</f:if><f:if condition="{report.security}">
+{labels.securityHeading} ({report.counts.security})
+<f:for each="{report.security}" as="s">- {s.name} [{s.severity}] {s.cve}<f:if condition="{s.cve}">: </f:if>{s.title}<f:if condition="{s.link}"> {s.link}</f:if>
+</f:for></f:if><f:if condition="{report.typo3}">
+{labels.typo3Heading} ({report.typo3 -> f:count()})
+<f:for each="{report.typo3}" as="p">- {p.name}: {p.current} -> {p.latest} ({p.impact})<f:if condition="{p.nextMajor}">, {labels.majorPrefix}: {p.nextMajor}</f:if><f:if condition="{p.abandoned}">, {labels.abandoned}</f:if>
+</f:for></f:if><f:if condition="{report.other}">
+{labels.otherHeading} ({report.other -> f:count()})
+<f:for each="{report.other}" as="p">- {p.name}: {p.current} -> {p.latest} ({p.impact})<f:if condition="{p.nextMajor}">, {labels.majorPrefix}: {p.nextMajor}</f:if><f:if condition="{p.abandoned}">, {labels.abandoned}</f:if>
+</f:for></f:if><f:if condition="{report.majorOnly}">
+{labels.majorOnlyHeading} ({report.majorOnly -> f:count()})
+{labels.majorOnlyHint}
+<f:for each="{report.majorOnly}" as="m">- {m.name}: {m.current}, {labels.majorPrefix}: {m.nextMajor}
+</f:for></f:if><f:if condition="{report.private}">
+{labels.privateHeading} ({report.counts.private})
+{labels.privateHint}
+<f:for each="{report.private}" as="name">- {name}
+</f:for></f:if>
+--
+{labels.footer} - https://www.pixelegg.de

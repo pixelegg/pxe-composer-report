@@ -1,0 +1,9 @@
+{
+    "_readme": ["test fixture: minimal composer.lock"],
+    "content-hash": "0000",
+    "packages": [
+        {"name": "typo3/cms-core", "version": "v13.4.1", "description": "TYPO3 CMS Core"},
+        {"name": "acme/intranet", "version": "2.0.0", "description": "Private"}
+    ],
+    "packages-dev": []
+}

@@ -1,0 +1,7 @@
+{
+    "installed": [
+        {"name": "typo3/cms-core", "direct-dependency": true, "version": "v13.4.1", "latest": "v13.4.37", "latest-status": "semver-safe-update", "description": "TYPO3 CMS Core", "abandoned": false},
+        {"name": "guzzlehttp/guzzle", "direct-dependency": true, "version": "7.8.0", "latest": "7.9.2", "latest-status": "semver-safe-update", "description": "HTTP client", "abandoned": false},
+        {"name": "acme/legacy", "direct-dependency": true, "version": "1.0.0", "latest": "1.0.1", "latest-status": "semver-safe-update", "description": "Old", "abandoned": "acme/modern"}
+    ]
+}

@@ -1,0 +1,4 @@
+{
+    "name": "test/project",
+    "require": {"typo3/cms-core": "^13.4", "acme/intranet": "^2.0"}
+}
