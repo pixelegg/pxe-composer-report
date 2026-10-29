@@ -4,6 +4,37 @@ All notable changes to this extension are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+## [1.2.1] - 2026-10-29
+
+### Fixed
+- Backend module uses the core module layout again: docheader and padded
+  module body in TYPO3 13.4 and 14 (the extension's own layout dropped both,
+  and with them the flash messages after "Refresh now" and "Send test mail").
+  Both buttons now sit in the docheader button bar.
+- The "security" chip was unreadable (white text on a light background): the
+  danger and warning chips now use the core surface-container colour pairs
+  (contrast about 13:1, light and dark mode).
+- The trend sparkline is rendered as the last chip of the summary row instead
+  of being pushed against the right edge.
+- Plain-text email part was HTML-escaped (`&quot;Latest&quot;`, `&amp;` and
+  `&lt;` in advisory titles). The HTML part stays escaped.
+- "Triggered by" in the module shows translated values (CLI command, manually
+  in the backend, scheduler task) instead of `cli` / `manual` / `scheduler`.
+- Extension configuration: the tabs are labelled *Privacy*, *Email* and *AI
+  summary* (en/de) and the settings are grouped under fitting headings instead
+  of "Enable features".
+- Scheduler: the task is listed in the group "Composer Report" instead of the
+  raw extension key.
+- `Documentation/guides.xml` validates against the render-guides schema
+  (namespace, TYPO3 docs theme extension).
+- README and documentation name the module locations for TYPO3 13.4 and 14.
+
+### Changed
+- Documentation: screenshots of frontend and backend (TYPO3 14) in README and manual.
+- TER upload comment is generated as plain text from this changelog.
+
 ## [1.2.0] - 2026-10-28
 
 First public release, prepared for the TYPO3 Extension Repository and Packagist.

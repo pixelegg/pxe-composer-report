@@ -6,11 +6,10 @@ CLI command that store the report on a schedule and optionally email it.
 
 Supports TYPO3 13.4 LTS and 14 (PHP 8.2 to 8.4). English and German.
 
-![Backend module](Documentation/Images/module.png)
-*(screenshot placeholder: backend module with security advisories, TYPO3 and other packages)*
+![Backend module with summary chips, two security advisories, outdated TYPO3 packages and other packages](Documentation/Images/backend-module.png)
 
-![Report email](Documentation/Images/email.png)
-*(screenshot placeholder: report email)*
+*The backend module on a demo installation with TYPO3 14.3.8, an older Guzzle and an
+old PHPMailer that has known advisories.*
 
 ## What it does
 
@@ -56,7 +55,11 @@ and writes the default settings.
 
 ## Configuration
 
-*Admin Tools > Settings > Extension Configuration > pxe_composer_report*
+TYPO3 13.4: *Admin Tools > Settings > Extension Configuration > pxe_composer_report*\
+TYPO3 14: *System > Settings > Extension Configuration > pxe_composer_report*
+
+The settings are grouped in the tabs *Basic* (collector, report and history),
+*Privacy*, *Email* and *AI summary*.
 
 | Setting | Default | Meaning |
 |---|---|---|
@@ -74,6 +77,10 @@ and writes the default settings.
 | `anthropicApiKey` | – | API key, required for the summary; stored in the TYPO3 system configuration |
 | `anthropicModel` | `claude-haiku-5-5` | Model id for the summary; `claude-sonnet-5-5` or `claude-opus-5-5` for a more capable (and more expensive) one |
 
+![Extension configuration of pxe_composer_report, tab Privacy, with the settings for Packagist lookups and private vendors](Documentation/Images/backend-extension-configuration.png)
+
+*Extension configuration, tab "Privacy".*
+
 The sender address is TYPO3's system mail address
 (`$GLOBALS['TYPO3_CONF_VARS']['MAIL']['defaultMailFromAddress']`).
 
@@ -86,15 +93,20 @@ the cron user is used as is.
 
 ### Backend module
 
-*Admin Tools > Composer Report* (the group is called *Administration* in
-TYPO3 14), administrators only. *Refresh now* runs a report immediately (this
-can take a minute, composer talks to the repositories). *Send test mail* sends
-the current report to one address or to the configured recipients. Both are
-POST requests with a CSRF token.
+TYPO3 13.4: *Admin Tools > Composer Report*; TYPO3 14: *Administration >
+Composer Report* (the main module "Admin Tools" was renamed). Administrators
+only. The buttons sit in the module's docheader: *Refresh now* runs a report
+immediately (this can take a minute, composer talks to the repositories).
+*Send test mail* sends the current report to one address or to the configured
+recipients. Both are POST requests with a CSRF token.
+
+German interface: [screenshot](Documentation/Images/backend-module-de.png).
 
 ### Scheduler
 
-Add the task *Composer update report (read-only)*, e.g. weekly. A failed run
+Add the task *Composer update report (read-only)* from the group *Composer
+Report* (*System > Scheduler* in TYPO3 13.4, *Administration > Scheduler* in
+TYPO3 14), e.g. weekly. A failed run
 is stored with status "error" and marks the task execution as failed, so it
 shows up in the scheduler module.
 
@@ -109,6 +121,15 @@ vendor/bin/typo3 pxe:composer-report:run --json    # print the stored report as 
 Exit codes: `0` no security advisories, `1` security advisories found, `2` the
 run failed (details on stderr and in the stored run). Suitable for cron and CI,
 e.g. `... || notify-team`.
+
+### Email
+
+With `emailEnabled` on, scheduled and CLI runs (`--mail`) send the report as
+HTML with a plain-text alternative:
+
+![Report email with summary chips, security advisories, TYPO3 packages and other packages](Documentation/Images/email.png)
+
+*HTML part of the report email (English).*
 
 ### Run history
 

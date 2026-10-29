@@ -72,6 +72,36 @@ final class ReportMailerTest extends FunctionalTestCase
     }
 
     #[Test]
+    public function plainTextPartIsNotHtmlEscaped(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['pxe_composer_report'] = [
+            'emailRecipients' => 'a@example.com',
+            'emailLanguage' => 'en',
+        ];
+        $report = $this->report();
+        $report['security'][0]['title'] = 'XSS in <script> & "quoted" \'args\'';
+
+        self::assertTrue($this->get(ReportMailer::class)->send($report, 'Update A & B "now" <soon>', 'R&D <Intranet>'));
+
+        $email = $this->sentEmail();
+        $text = (string)$email->getTextBody();
+        self::assertStringContainsString('XSS in <script> & "quoted" \'args\'', $text);
+        self::assertStringContainsString('Update A & B "now" <soon>', $text);
+        self::assertStringContainsString('R&D <Intranet>', $text);
+        self::assertStringContainsString('"Latest" is the newest stable version', $text);
+        self::assertStringNotContainsString('&quot;', $text);
+        self::assertStringNotContainsString('&amp;', $text);
+        self::assertStringNotContainsString('&lt;', $text);
+        self::assertStringNotContainsString('&#039;', $text);
+
+        // The HTML part keeps escaping everything.
+        $html = (string)$email->getHtmlBody();
+        self::assertStringContainsString('XSS in &lt;script&gt; &amp; &quot;quoted&quot;', $html);
+        self::assertStringNotContainsString('<script>', $html);
+        self::assertStringNotContainsString('<soon>', $html);
+    }
+
+    #[Test]
     public function sendsGermanMailWhenConfigured(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['pxe_composer_report'] = [

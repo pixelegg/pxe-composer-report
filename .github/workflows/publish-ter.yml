@@ -3,8 +3,8 @@
 # Setup (once): create an access token at https://extensions.typo3.org/my-access-tokens
 # (scope "extension:write") and store it as the repository secret TYPO3_API_TOKEN.
 # Release: bump `version` in ext_emconf.php, add the CHANGELOG entry, then push a tag
-# `vX.Y.Z` that matches it. The tag message (or the CHANGELOG section) becomes the
-# upload comment.
+# `vX.Y.Z` that matches it. The CHANGELOG section of the version, as plain text
+# (.github/ter-comment.py), becomes the upload comment.
 name: Publish to TER
 
 on:
@@ -62,18 +62,11 @@ jobs:
         if: steps.token.outputs.present == 'true'
         id: comment
         run: |
-          COMMENT=$(git tag -l --format='%(contents)' "$GITHUB_REF_NAME" | head -c 1500)
-          if [ -z "$COMMENT" ]; then
-            COMMENT="Release ${{ steps.version.outputs.version }}, see CHANGELOG.md"
-          fi
-          {
-            echo 'comment<<EOF'
-            echo "$COMMENT"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
+          python3 .github/ter-comment.py "${{ steps.version.outputs.version }}" > "$RUNNER_TEMP/ter-comment.txt"
+          cat "$RUNNER_TEMP/ter-comment.txt"
 
       - name: Publish
         if: steps.token.outputs.present == 'true'
         run: |
           ~/.composer/vendor/bin/tailor set-version "${{ steps.version.outputs.version }}" --no-docs
-          ~/.composer/vendor/bin/tailor ter:publish --comment "${{ steps.comment.outputs.comment }}" "${{ steps.version.outputs.version }}"
+          ~/.composer/vendor/bin/tailor ter:publish --comment "$(cat "$RUNNER_TEMP/ter-comment.txt")" "${{ steps.version.outputs.version }}"

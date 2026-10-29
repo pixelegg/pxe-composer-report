@@ -1,11 +1,11 @@
 <?php
 
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'pxe Composer Report',
+    'title' => 'Composer Report',
     'description' => 'Per-project, read-only composer update report: backend module + optional scheduled email.',
     'category' => 'module',
     'state' => 'beta',
-    'version' => '1.2.0',
+    'version' => '1.2.1',
     'author' => 'pixelegg',
     'author_email' => 'info@pixelegg.de',
     'author_company' => 'pixelegg Informatik & Design GmbH',

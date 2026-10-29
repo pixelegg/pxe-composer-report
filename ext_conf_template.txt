@@ -1,38 +1,47 @@
-# cat=basic/enable/010; type=options[auto,composer,packagist]; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.collectorMode
+# customcategory=privacy=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.category.privacy
+# customcategory=email=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.category.email
+# customcategory=ai=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.category.ai
+# customsubcategory=collector=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.subcategory.collector
+# customsubcategory=report=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.subcategory.report
+# customsubcategory=lookups=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.subcategory.lookups
+# customsubcategory=delivery=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.subcategory.delivery
+# customsubcategory=anthropic=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.subcategory.anthropic
+
+# cat=basic/collector/010; type=options[auto,composer,packagist]; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.collectorMode
 collectorMode = auto
 
-# cat=basic/enable/020; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.composerBinary
+# cat=basic/collector/020; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.composerBinary
 composerBinary = composer
 
-# cat=basic/enable/030; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.projectLabel
+# cat=basic/report/030; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.projectLabel
 projectLabel =
 
-# cat=basic/enable/040; type=int+; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.keepRuns
+# cat=basic/report/040; type=int+; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.keepRuns
 keepRuns = 50
 
-# cat=privacy/enable/010; type=boolean; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.resolveLatestViaPackagist
+# cat=privacy/lookups/010; type=boolean; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.resolveLatestViaPackagist
 resolveLatestViaPackagist = 1
 
-# cat=privacy/enable/020; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.privateVendors
+# cat=privacy/lookups/020; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.privateVendors
 privateVendors =
 
-# cat=email/enable/010; type=boolean; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.emailEnabled
+# cat=email/delivery/010; type=boolean; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.emailEnabled
 emailEnabled = 0
 
-# cat=email/enable/020; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.emailRecipients
+# cat=email/delivery/020; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.emailRecipients
 emailRecipients =
 
-# cat=email/enable/030; type=boolean; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.emailOnlyOnFindings
+# cat=email/delivery/030; type=boolean; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.emailOnlyOnFindings
 emailOnlyOnFindings = 1
 
-# cat=email/enable/040; type=options[English=en,Deutsch=de]; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.emailLanguage
+# cat=email/delivery/040; type=options[English=en,Deutsch=de]; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.emailLanguage
 emailLanguage = en
 
-# cat=ai/enable/010; type=boolean; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.aiEnabled
+# cat=ai/anthropic/010; type=boolean; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.aiEnabled
 aiEnabled = 0
 
-# cat=ai/enable/020; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.anthropicApiKey
+# cat=ai/anthropic/020; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.anthropicApiKey
 anthropicApiKey =
 
-# cat=ai/enable/030; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.anthropicModel
+# cat=ai/anthropic/030; type=string; label=LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:conf.anthropicModel
 anthropicModel = claude-haiku-5-5

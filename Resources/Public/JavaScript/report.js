@@ -2,7 +2,8 @@
  * pxe_composer_report backend module. Loaded as an ES module (no inline JS, CSP-safe).
  *  - sparkline bar heights (set via CSSOM, no inline style attributes in the template)
  *  - severity column sort for the advisories table
- *  - opens the native <dialog> for the test mail form (the form itself posts without JS)
+ *  - opens the native <dialog> for the test mail form (the form itself posts without JS);
+ *    the opening button sits in the docheader, outside the .pxecr module body
  */
 
 const SEVERITY_RANK = { critical: 4, high: 3, medium: 2, low: 1 };
@@ -32,7 +33,7 @@ function initSeveritySort() {
 }
 
 function initTestMailDialog() {
-  const openButton = document.querySelector('.pxecr [data-pxecr-testmail]');
+  const openButton = document.querySelector('[data-pxecr-testmail]');
   const dialog = document.querySelector('.pxecr [data-pxecr-dialog]');
   if (!openButton || !dialog || typeof dialog.showModal !== 'function') {
     return;

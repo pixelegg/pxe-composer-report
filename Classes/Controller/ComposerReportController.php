@@ -12,8 +12,13 @@ use Pixelegg\PxeComposerReport\Service\RunResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Template\Components\ButtonBar;
+use TYPO3\CMS\Backend\Template\Components\Buttons\GenericButton;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Http\RedirectResponse;
+use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
@@ -23,6 +28,9 @@ final class ComposerReportController
 {
     private const LLL = 'LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:';
 
+    /** id of the (empty) POST form in the module body that the docheader "Refresh now" button submits */
+    public const REFRESH_FORM_ID = 'pxecr-refresh-form';
+
     public function __construct(
         private readonly ModuleTemplateFactory $moduleTemplateFactory,
         private readonly RunRepository $runRepository,
@@ -31,6 +39,7 @@ final class ComposerReportController
         private readonly ReportMailer $mailer,
         private readonly UriBuilder $uriBuilder,
         private readonly PageRenderer $pageRenderer,
+        private readonly IconFactory $iconFactory,
     ) {}
 
     public function indexAction(ServerRequestInterface $request): ResponseInterface
@@ -51,6 +60,7 @@ final class ComposerReportController
 
         $view = $this->moduleTemplateFactory->create($request);
         $view->setTitle($this->translate('mod.title'), $this->config->projectLabel());
+        $this->addDocHeaderButtons($view);
         $view->assignMultiple([
             'latest' => $latest,
             'report' => $report,
@@ -59,6 +69,7 @@ final class ComposerReportController
             'trend' => $this->trendPoints($history),
             'projectLabel' => $this->config->projectLabel(),
             'refreshUri' => (string)$this->uriBuilder->buildUriFromRoute('pxe_composer_report.refresh'),
+            'refreshFormId' => self::REFRESH_FORM_ID,
             'testMailUri' => (string)$this->uriBuilder->buildUriFromRoute('pxe_composer_report.testMail'),
             'mailRecipients' => implode(', ', $this->config->list('emailRecipients')),
             'collectorMode' => $this->config->get('collectorMode', 'auto'),
@@ -113,6 +124,38 @@ final class ComposerReportController
             $this->flash($request, $this->translate('flash.mailFailed'), ContextualFeedbackSeverity::ERROR);
         }
         return new RedirectResponse($this->moduleUri());
+    }
+
+    /**
+     * "Refresh now" and "Send test mail" live in the docheader button bar.
+     *
+     * Plain GenericButton instances work the same on TYPO3 13.4 and 14 (the ButtonBar::make*()
+     * factories are deprecated in 14, ComponentFactory does not exist in 13). "Refresh now"
+     * is a submit button bound to the POST form in the module body via the form attribute,
+     * so it works without JavaScript; "Send test mail" opens the dialog (report.js).
+     * The play icon keeps it apart from the automatic "Reload" button (refresh icon) of TYPO3 14.
+     */
+    private function addDocHeaderButtons(ModuleTemplate $view): void
+    {
+        $buttonBar = $view->getDocHeaderComponent()->getButtonBar();
+
+        $refresh = GeneralUtility::makeInstance(GenericButton::class)
+            ->setTag('button')
+            ->setLabel($this->translate('mod.refresh'))
+            ->setTitle($this->translate('mod.refreshHint'))
+            ->setShowLabelText(true)
+            ->setIcon($this->iconFactory->getIcon('actions-play', IconSize::SMALL))
+            ->setAttributes(['type' => 'submit', 'form' => self::REFRESH_FORM_ID]);
+        $buttonBar->addButton($refresh, ButtonBar::BUTTON_POSITION_LEFT, 1);
+
+        $testMail = GeneralUtility::makeInstance(GenericButton::class)
+            ->setTag('button')
+            ->setLabel($this->translate('mod.testMail'))
+            ->setTitle($this->translate('mod.testMail'))
+            ->setShowLabelText(true)
+            ->setIcon($this->iconFactory->getIcon('actions-envelope', IconSize::SMALL))
+            ->setAttributes(['type' => 'button', 'data-pxecr-testmail' => '1', 'aria-haspopup' => 'dialog']);
+        $buttonBar->addButton($testMail, ButtonBar::BUTTON_POSITION_LEFT, 2);
     }
 
     /**

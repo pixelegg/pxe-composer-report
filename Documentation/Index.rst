@@ -13,10 +13,11 @@ Read-only composer update report for TYPO3 13.4 LTS and 14: a backend module
 that lists outdated packages and known security advisories of the project, a
 scheduler task and a CLI command that store the report and optionally email it.
 
-.. figure:: Images/module.png
-   :alt: Backend module (screenshot placeholder)
+.. figure:: /Images/backend-module.png
+   :alt: Backend module with summary chips, two security advisories, outdated TYPO3 packages and other packages
 
-   Backend module with security advisories, TYPO3 packages and other packages.
+   The backend module on a demo installation with TYPO3 14.3.8, an older Guzzle
+   and an old PHPMailer that has known advisories.
 
 What it does
 ============
@@ -59,7 +60,10 @@ Installation
 Configuration
 =============
 
-Admin Tools > Settings > Extension Configuration > pxe_composer_report:
+*Admin Tools > Settings > Extension Configuration > pxe_composer_report* in
+TYPO3 13.4, *System > Settings > Extension Configuration > pxe_composer_report*
+in TYPO3 14. The settings are grouped in the tabs *Basic* (collector, report and
+history), *Privacy*, *Email* and *AI summary*:
 
 .. list-table::
    :header-rows: 1
@@ -119,22 +123,35 @@ Admin Tools > Settings > Extension Configuration > pxe_composer_report:
 The sender address is TYPO3's system mail address. When ``HOME`` is unset
 (php-fpm), ``COMPOSER_HOME`` is set to ``var/pxe_composer_report/composer-home``.
 
+.. figure:: /Images/backend-extension-configuration.png
+   :alt: Extension configuration of pxe_composer_report, tab Privacy, with the settings for Packagist lookups and private vendors
+
+   Extension configuration, tab "Privacy".
+
 Usage
 =====
 
 Backend module
 --------------
 
-*Admin Tools > Composer Report* (*Administration* in TYPO3 14), administrators
-only. *Refresh now* runs a report immediately; *Send test mail* sends the
-current report to one address or to the configured recipients. Both are POST
-requests with a CSRF token.
+*Admin Tools > Composer Report* in TYPO3 13.4, *Administration > Composer
+Report* in TYPO3 14 (the main module "Admin Tools" was renamed). Administrators
+only. The buttons sit in the module's docheader: *Refresh now* runs a report
+immediately; *Send test mail* sends the current report to one address or to the
+configured recipients. Both are POST requests with a CSRF token.
+
+.. figure:: /Images/backend-module-de.png
+   :alt: The same backend module with German labels
+
+   The module with the backend language set to German.
 
 Scheduler
 ---------
 
-Add the task *Composer update report (read-only)*, e.g. weekly. A failed run is
-stored with status "error" and marks the task execution as failed.
+Add the task *Composer update report (read-only)* from the group *Composer
+Report* (*System > Scheduler* in TYPO3 13.4, *Administration > Scheduler* in
+TYPO3 14), e.g. weekly. A failed run is stored with status "error" and marks the
+task execution as failed.
 
 CLI
 ---
@@ -147,6 +164,17 @@ CLI
 
 Exit codes: ``0`` no security advisories, ``1`` security advisories found,
 ``2`` the run failed.
+
+Email
+-----
+
+With ``emailEnabled`` on, scheduled and CLI runs (``--mail``) send the report
+as HTML with a plain-text alternative.
+
+.. figure:: /Images/email.png
+   :alt: Report email with summary chips, security advisories, TYPO3 packages and other packages
+
+   HTML part of the report email (English).
 
 Privacy and external connections
 ================================

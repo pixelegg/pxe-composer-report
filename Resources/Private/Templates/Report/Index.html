@@ -1,39 +1,30 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
       xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
       data-namespace-typo3-fluid="true">
-<f:layout name="Default" />
+<f:layout name="Module" />
 <f:section name="Content">
 <f:variable name="lll" value="LLL:EXT:pxe_composer_report/Resources/Private/Language/locallang.xlf:" />
 
 <div class="pxecr">
 
     <div class="pxecr-head">
-        <div>
-            <h1 class="pxecr-title">{f:translate(key: '{lll}mod.title')}: {projectLabel}</h1>
-            <f:if condition="{latest}">
-                <p class="text-body-secondary pxecr-meta">
-                    <f:translate key="{lll}mod.checkedAt" />:
-                    <strong><f:format.date format="Y-m-d H:i">@{latest.crdate}</f:format.date></strong>
-                    <f:if condition="{latest.collector}">
-                        &middot; <f:translate key="{lll}mod.collector" />: <code>{latest.collector}</code>
-                    </f:if>
-                    &middot; <f:translate key="{lll}mod.triggeredBy" />: {latest.triggered_by}
-                </p>
-            </f:if>
-        </div>
-        <div class="pxecr-actions">
-            <form method="post" action="{refreshUri}" class="d-inline">
-                <button type="submit" class="btn btn-primary" title="{f:translate(key: '{lll}mod.refreshHint')}">
-                    <core:icon identifier="actions-refresh" size="small" />
-                    <f:translate key="{lll}mod.refresh" />
-                </button>
-            </form>
-            <button type="button" class="btn btn-default" data-pxecr-testmail>
-                <core:icon identifier="actions-envelope" size="small" />
-                <f:translate key="{lll}mod.testMail" />
-            </button>
-        </div>
+        <h1 class="pxecr-title">{f:translate(key: '{lll}mod.title')}: {projectLabel}</h1>
+        <f:if condition="{latest}">
+            <p class="text-body-secondary pxecr-meta">
+                <f:translate key="{lll}mod.checkedAt" />:
+                <strong><f:format.date format="Y-m-d H:i">@{latest.crdate}</f:format.date></strong>
+                <f:if condition="{latest.collector}">
+                    &middot; <f:translate key="{lll}mod.collector" />: <code>{latest.collector}</code>
+                </f:if>
+                <f:if condition="{latest.triggered_by}">
+                    &middot; <f:translate key="{lll}mod.triggeredBy" />: <f:translate key="{lll}trigger.{latest.triggered_by}" default="{latest.triggered_by}" />
+                </f:if>
+            </p>
+        </f:if>
     </div>
+
+    <f:comment>Submitted by the "Refresh now" button in the docheader (form attribute); the CSRF token is part of refreshUri.</f:comment>
+    <form id="{refreshFormId}" method="post" action="{refreshUri}" class="d-none"></form>
 
     <f:if condition="{error}">
         <div class="callout callout-danger">
@@ -79,8 +70,11 @@
                     <span class="pxecr-chip"><b>{report.counts.private}</b> <f:translate key="{lll}mod.private" /></span>
                 </f:if>
                 <f:if condition="{trend}">
-                    <span class="pxecr-spark" role="img" aria-label="{f:translate(key: '{lll}mod.trend')}" title="{f:translate(key: '{lll}mod.trend')}">
-                        <f:for each="{trend}" as="pt"><span class="pxecr-bar {f:if(condition: pt.error, then: 'pxecr-bar-error')}" data-pxecr-height="{pt.h}" title="{pt.label}"></span></f:for>
+                    <span class="pxecr-chip pxecr-chip-trend" title="{f:translate(key: '{lll}mod.trend')}">
+                        <span class="pxecr-trend-label"><f:translate key="{lll}mod.trendLabel" /></span>
+                        <span class="pxecr-spark" role="img" aria-label="{f:translate(key: '{lll}mod.trend')}">
+                            <f:for each="{trend}" as="pt"><span class="pxecr-bar {f:if(condition: pt.error, then: 'pxecr-bar-error')}" data-pxecr-height="{pt.h}" title="{pt.label}"></span></f:for>
+                        </span>
                     </span>
                 </f:if>
             </div>

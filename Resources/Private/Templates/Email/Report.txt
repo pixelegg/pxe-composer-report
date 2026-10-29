@@ -1,4 +1,4 @@
-<f:spaceless>{labels.title}: {projectLabel}
+<f:format.raw><f:spaceless>{labels.title}: {projectLabel}
 {labels.checkedAt} {date} - {labels.collector}: {report.collector}
 </f:spaceless>
 
@@ -29,4 +29,4 @@
 <f:for each="{report.private}" as="name">- {name}
 </f:for></f:if>
 --
-{labels.footer} - https://www.pixelegg.de
+{labels.footer} - https://www.pixelegg.de</f:format.raw>

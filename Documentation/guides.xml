@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<guides xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://typo3.org/standards/guides.xsd">
-    <project title="pxe_composer_report" version="1.2.0"/>
+<guides xmlns="https://www.phpdoc.org/guides"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://www.phpdoc.org/guides vendor/phpdocumentor/guides-cli/resources/schema/guides.xsd"
+        links-are-relative="true">
+    <extension class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
+               project-home="https://github.com/pixelegg/pxe-composer-report"
+               project-contact="mailto:info@pixelegg.de"
+               project-repository="https://github.com/pixelegg/pxe-composer-report"
+               project-issues="https://github.com/pixelegg/pxe-composer-report/issues"
+               edit-on-github-branch="main"
+               edit-on-github="pixelegg/pxe-composer-report"
+               typo3-core-preferred="stable"
+               interlink-shortcode="pixelegg/pxe-composer-report"
+    />
+    <project title="Composer Report"
+             release="1.2.1"
+             version="1.2.1"
+             copyright="since 2026 by pixelegg"
+    />
 </guides>
