@@ -4,7 +4,7 @@ pxe_composer_report
 
 :Extension key: pxe_composer_report
 :Package name: pixelegg/pxe-composer-report
-:Version: 1.2.0
+:Version: |release|
 :Language: en
 :Author: pixelegg
 :License: GPL-2.0-or-later
