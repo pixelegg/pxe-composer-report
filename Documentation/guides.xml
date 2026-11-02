@@ -14,8 +14,8 @@
                interlink-shortcode="pixelegg/pxe-composer-report"
     />
     <project title="Composer Report"
-             release="1.2.1"
-             version="1.2.1"
+             release="1.2.2"
+             version="1.2.2"
              copyright="since 2026 by pixelegg"
     />
 </guides>

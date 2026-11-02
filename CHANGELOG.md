@@ -6,6 +6,12 @@ All notable changes to this extension are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-11-02
+
+### Changed
+- `composer.json`: `homepage` points to the maintainer's website instead of repeating the
+  repository URL, which is already listed under `support.source`.
+
 ## [1.2.1] - 2026-10-29
 
 ### Fixed
